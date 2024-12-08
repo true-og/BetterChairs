@@ -13,7 +13,7 @@
     <artifactId>betterchairs-plugin</artifactId>
 
     <build>
-        <finalName>${pluginName}-v${project.parent.version}</finalName>
+        <finalName>${pluginName}-${project.parent.version}</finalName>
 
         <resources>
             <resource>
@@ -23,6 +23,27 @@
         </resources>
 
         <plugins>
+		  <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-antrun-plugin</artifactId>
+		    <version>3.1.0</version>
+		    <executions>
+		      <execution>
+		        <id>copy-jar</id>
+		        <goals>
+		          <goal>run</goal>
+		        </goals>
+		        <!-- Run during the child's package phase, after the JAR is produced -->
+		        <phase>package</phase>
+		        <configuration>
+		          <target>
+					  <copy file="target/BetterChairs-${project.version}.jar" overwrite="true" todir="../../target"></copy>
+		          </target>
+		        </configuration>
+		      </execution>
+		    </executions>
+		  </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -130,41 +151,6 @@
         <dependency>
             <groupId>de.sprax2013</groupId>
             <artifactId>betterchairs-api</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>de.sprax2013</groupId>
-            <artifactId>betterchairs-v1_21_R1</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>de.sprax2013</groupId>
-            <artifactId>betterchairs-v1_20_R4</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>de.sprax2013</groupId>
-            <artifactId>betterchairs-v1_20_R3</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>de.sprax2013</groupId>
-            <artifactId>betterchairs-v1_20_R2</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>de.sprax2013</groupId>
-            <artifactId>betterchairs-v1_20_R1</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
