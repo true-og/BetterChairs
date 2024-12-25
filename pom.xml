@@ -102,4 +102,22 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+	<profiles>
+		<profile>
+		    <id>use-self-maven-local-repo</id>
+			<activation>
+				<property>
+					<name>SELF_MAVEN_LOCAL_REPO</name>
+				</property>
+			</activation>
+
+			<repositories>
+				<repository>
+					<id>self-maven-local</id>
+					<name>TrueOG Bootstrap local Maven repository</name>
+					<url>file://${SELF_MAVEN_LOCAL_REPO}</url>
+				</repository>
+			</repositories>
+		</profile>
+	</profiles>
 </project>
