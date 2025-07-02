@@ -2,16 +2,6 @@ package de.sprax2013.betterchairs;
 
 import de.sprax2013.betterchairs.events.PlayerEnterChairEvent;
 import de.sprax2013.betterchairs.events.PlayerLeaveChairEvent;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -23,6 +13,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class should be instantiated as soon as possible inside
@@ -75,7 +74,10 @@ public class ChairManager {
      * @see #create(Player, Block, double)
      */
     public boolean create(Player player, Block block) {
-        return create(player, block, ChairUtils.getSitOffset(block, !Settings.SIT_ON_ARROWS.getValueAsBoolean(), this.chairNMS));
+        return create(
+                player,
+                block,
+                ChairUtils.getSitOffset(block, !Settings.SIT_ON_ARROWS.getValueAsBoolean(), this.chairNMS));
     }
 
     /**
@@ -92,7 +94,8 @@ public class ChairManager {
         if (!Bukkit.isPrimaryThread()) throw new IllegalStateException(Messages.ERR_ASYNC_API_CALL);
         if (isOccupied(block)) return false;
 
-        Entity chairEntity = instance.chairNMS.spawnChairEntity(block.getLocation().add(0.5, yOffset, 0.5),
+        Entity chairEntity = instance.chairNMS.spawnChairEntity(
+                block.getLocation().add(0.5, yOffset, 0.5),
                 ChairNMS.getRegenerationAmplifier(player),
                 !Settings.SIT_ON_ARROWS.getValueAsBoolean());
 
@@ -269,7 +272,8 @@ public class ChairManager {
         Boolean value = this.disabled.get(uuid);
 
         if (value == null) {
-            value = Settings.REMEMBER_IF_PLAYER_DISABLED_CHAIRS.getValueAsBoolean() && new File(this.disabledForDir, uuid.toString()).exists();
+            value = Settings.REMEMBER_IF_PLAYER_DISABLED_CHAIRS.getValueAsBoolean()
+                    && new File(this.disabledForDir, uuid.toString()).exists();
             if (!value) {
                 value = Settings.HAVE_CHAIRS_DISABLED_FOR_PLAYER_BY_DEFAULT.getValueAsBoolean();
             }
@@ -295,7 +299,7 @@ public class ChairManager {
         }
 
         if (directlyWriteToFile) {
-            onQuit(uuid);   // Write changes to file
+            onQuit(uuid); // Write changes to file
         }
     }
 

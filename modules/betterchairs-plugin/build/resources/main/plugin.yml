@@ -1,0 +1,43 @@
+name: BetterChairs
+description: Players can sit on chairs and everywhere the admin wants them to be able to.
+version: unspecified
+api-version: '1.19'
+
+main: de.sprax2013.betterchairs.BetterChairsPlugin
+softdepend:
+  - PlaceholderAPI
+
+author: SpraxDev
+authors: [ BlackScarx ]
+website: https://github.com/SpraxDev/BetterChairs
+
+commands:
+  BetterChairs:
+    description: 'Toggle, Reload or Reset BetterChairs'
+  toggleChairs:
+    description: 'Allows individual players to disabled chairs for them'
+    aliases: [ bct ]
+    permission: BetterChairs.cmd.toggle
+  sit:
+    description: 'Allows a player to sit on the ground'
+    permission: BetterChairs.cmd.sit
+
+permissions:
+  BetterChairs.use:
+    description: Allows players to sit on chairs
+    default: true
+  BetterChairs.regeneration:
+    description: Grants regeneration to a player when sitting
+  BetterChairs.updater:
+    description: Notifies players about updates when joining the server
+  BetterChairs.cmd.toggle:
+    description: Allows individual players to disabled chairs for them
+    default: true
+  BetterChairs.cmd.sit:
+    description: Allows a player to sit on the ground
+    default: true
+  BetterChairs.cmd.reset:
+    description: Allows admins to eject all players from their chairs
+  BetterChairs.cmd.reload:
+    description: Allows admins to reload the plugin's configuration files
+

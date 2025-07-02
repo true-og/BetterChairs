@@ -66,11 +66,15 @@ public class ChairUtils {
                         nbt.setBoolean("NoGravity", true);
                     }
                 } catch (Throwable ex) {
-                    ChairManager.getLogger().warning("Could not apply chair modifications (" + ex.getClass().getSimpleName() + ": " + ex.getMessage() + ")!");
+                    ChairManager.getLogger()
+                            .warning("Could not apply chair modifications ("
+                                    + ex.getClass().getSimpleName() + ": " + ex.getMessage() + ")!");
                 }
             });
         } catch (Throwable ex) {
-            ChairManager.getLogger().warning("Could not apply chair modifications (" + ex.getClass().getSimpleName() + ": " + ex.getMessage() + ")!");
+            ChairManager.getLogger()
+                    .warning("Could not apply chair modifications ("
+                            + ex.getClass().getSimpleName() + ": " + ex.getMessage() + ")!");
         }
     }
 
@@ -102,22 +106,27 @@ public class ChairUtils {
     }
 
     public static boolean didChairEntityMove(Location expected, double actualX, double actualY, double actualZ) {
-        return actualX != expected.getX() ||
-                actualY != expected.getY() ||
-                actualZ != expected.getZ();
+        return actualX != expected.getX() || actualY != expected.getY() || actualZ != expected.getZ();
     }
 
     public static void applyRegeneration(HumanEntity p, int regenerationAmplifier) {
         if (regenerationAmplifier >= 0 && !p.hasPotionEffect(PotionEffectType.REGENERATION)) {
-            p.addPotionEffect(new PotionEffect(
-                    PotionEffectType.REGENERATION, ChairNMS.REGENERATION_EFFECT_DURATION, regenerationAmplifier,
-                    false, false), true);
+            p.addPotionEffect(
+                    new PotionEffect(
+                            PotionEffectType.REGENERATION,
+                            ChairNMS.REGENERATION_EFFECT_DURATION,
+                            regenerationAmplifier,
+                            false,
+                            false),
+                    true);
         }
     }
 
     public static double getSitOffset(Block block, boolean sitsOnArmorStand, ChairNMS chairNMS) {
-        double yOffset = (!chairNMS.isStair(block) && !chairNMS.isSlab(block)) ||
-                (chairNMS.isSlab(block) && chairNMS.isSlabTop(block)) ? 0.5 : 0;
+        double yOffset = (!chairNMS.isStair(block) && !chairNMS.isSlab(block))
+                        || (chairNMS.isSlab(block) && chairNMS.isSlabTop(block))
+                ? 0.5
+                : 0;
 
         XMaterial blockType = XMaterial.matchXMaterial(block.getType());
 

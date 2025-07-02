@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
  * </ul>
  */
 public abstract class ChairNMS {
-    public static final int REGENERATION_EFFECT_DURATION = 3 * 20;    // In Ticks
+    public static final int REGENERATION_EFFECT_DURATION = 3 * 20; // In Ticks
 
     /**
      * Spawns an Entity that is/has:
@@ -83,10 +83,10 @@ public abstract class ChairNMS {
     }
 
     public static int getRegenerationAmplifier(Player p) {
-        if (!Settings.REGENERATION_ENABLED.getValueAsBoolean() ||
-                Settings.REGENERATION_AMPLIFIER.getValueAsInt() <= 0 ||
-                (Settings.REGENERATION_CHECK_PERMISSION.getValueAsBoolean() &&
-                        !p.hasPermission(ChairManager.plugin.getName() + ".regeneration"))) return -1;
+        if (!Settings.REGENERATION_ENABLED.getValueAsBoolean()
+                || Settings.REGENERATION_AMPLIFIER.getValueAsInt() <= 0
+                || (Settings.REGENERATION_CHECK_PERMISSION.getValueAsBoolean()
+                        && !p.hasPermission(ChairManager.plugin.getName() + ".regeneration"))) return -1;
 
         return Settings.REGENERATION_AMPLIFIER.getValueAsInt() - 1;
     }

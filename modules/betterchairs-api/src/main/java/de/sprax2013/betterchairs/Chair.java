@@ -13,7 +13,8 @@ import org.jetbrains.annotations.NotNull;
  * as soon the player leaves the chair
  */
 public class Chair {
-    private static final String ERR_MANAGER_NOT_AVAILABLE = "ChairManager is not available yet - Did BetterChairs successfully enable?";
+    private static final String ERR_MANAGER_NOT_AVAILABLE =
+            "ChairManager is not available yet - Did BetterChairs successfully enable?";
 
     protected final Block block;
     protected final Entity chairEntity;
@@ -48,11 +49,9 @@ public class Chair {
     public @NotNull ChairType getType() {
         if (ChairManager.getInstance() == null) throw new IllegalStateException(ERR_MANAGER_NOT_AVAILABLE);
 
-        if (ChairManager.getInstance().chairNMS.isStair(this.block))
-            return ChairType.STAIR;
+        if (ChairManager.getInstance().chairNMS.isStair(this.block)) return ChairType.STAIR;
 
-        if (ChairManager.getInstance().chairNMS.isSlab(this.block))
-            return ChairType.SLAB;
+        if (ChairManager.getInstance().chairNMS.isSlab(this.block)) return ChairType.SLAB;
 
         return ChairType.CUSTOM;
     }
