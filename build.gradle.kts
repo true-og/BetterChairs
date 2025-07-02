@@ -12,7 +12,20 @@ version = "1.13-OG"
 val pluginName = "BetterChairs"
 
 allprojects {
-    repositories {
+
+val customMavenLocal = System.getProperty("SELF_MAVEN_LOCAL_REPO")
+if (customMavenLocal != null) {
+    val mavenLocalDir = file(customMavenLocal)
+    if (mavenLocalDir.isDirectory) {
+        repositories {
+            maven {
+                url = uri("file://${mavenLocalDir.absolutePath}")
+            }
+        }
+    }
+}
+ 
+repositories {
         mavenLocal()
         mavenCentral()
         gradlePluginPortal()
