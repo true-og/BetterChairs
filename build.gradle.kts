@@ -1,3 +1,9 @@
+import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
+import org.gradle.api.tasks.bundling.AbstractArchiveTask
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.jvm.toolchain.JvmVendorSpec
+import org.gradle.language.jvm.tasks.ProcessResources
+
 plugins {
     id("java")
     id("java-library")
@@ -12,21 +18,26 @@ version = "1.13-OG"
 val pluginName = "BetterChairs"
 
 allprojects {
-
-val customMavenLocal = System.getProperty("SELF_MAVEN_LOCAL_REPO")
-if (customMavenLocal != null) {
-    val mavenLocalDir = file(customMavenLocal)
-    if (mavenLocalDir.isDirectory) {
-        repositories {
-            maven {
-                url = uri("file://${mavenLocalDir.absolutePath}")
+    val customMavenLocal = System.getProperty("SELF_MAVEN_LOCAL_REPO")
+    if (customMavenLocal != null) {
+        val mavenLocalDir = file(customMavenLocal)
+        if (mavenLocalDir.isDirectory) {
+            repositories {
+                maven {
+                    url = uri("file://${mavenLocalDir.absolutePath}")
+                    metadataSources { mavenPom() }
+                    content {
+                        includeGroup("org.spigotmc")
+                        includeGroup("org.bukkit")
+                        includeGroup("net.md-5")
+                        includeGroup("com.mojang")
+                    }
+                }
             }
         }
     }
-}
- 
-repositories {
-        mavenLocal()
+
+    repositories {
         mavenCentral()
         gradlePluginPortal()
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
@@ -35,6 +46,7 @@ repositories {
         maven("https://repo.sprax2013.de/repository/maven-snapshots/")
         maven("https://repo.sprax2013.de/repository/maven-releases/")
         maven("https://repo.purpurmc.org/snapshots")
+        mavenLocal()
     }
 }
 
@@ -48,9 +60,27 @@ subprojects {
     java {
         sourceCompatibility = JavaVersion.VERSION_17
         toolchain {
-            languageVersion = JavaLanguageVersion.of(17)
-            vendor = JvmVendorSpec.GRAAL_VM
+            languageVersion.set(JavaLanguageVersion.of(17))
+            vendor.set(JvmVendorSpec.GRAAL_VM)
         }
+        withSourcesJar()
+        withJavadocJar()
+    }
+
+    configurations {
+        compileClasspath {
+            exclude(group = "junit")
+            exclude(group = "org.hamcrest")
+        }
+        runtimeClasspath {
+            exclude(group = "junit")
+            exclude(group = "org.hamcrest")
+        }
+    }
+
+    dependencies {
+        testImplementation("junit:junit:4.13.2")
+        testImplementation("org.hamcrest:hamcrest:2.2")
     }
 
     tasks.withType<AbstractArchiveTask>().configureEach {
@@ -107,17 +137,17 @@ project(":modules:betterchairs-plugin") {
 
     tasks.jar { archiveClassifier.set("part") }
 
-	tasks.shadowJar {
-		exclude("META-INF/**", "LICENSE")
-		minimize()
-		archiveClassifier.set("")
-		archiveBaseName.set("BetterChairs")
-		destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
-		relocate("betterchairs.nms", "de.sprax2013.betterchairs.nms")
-		relocate("de.sprax2013.lime", "de.sprax2013.betterchairs.third_party.de.sprax2013.lime")
-		relocate("de.tr7zw.changeme.nbtapi", "de.sprax2013.betterchairs.third_party.de.tr7zw.nbtapi")
-		relocate("com.cryptomorin.xseries", "de.sprax2013.betterchairs.third_party.com.cryptomorin.xseries")
-	}
+    tasks.shadowJar {
+        exclude("META-INF/**", "LICENSE")
+        minimize()
+        archiveClassifier.set("")
+        archiveBaseName.set("BetterChairs")
+        destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
+        relocate("betterchairs.nms", "de.sprax2013.betterchairs.nms")
+        relocate("de.sprax2013.lime", "de.sprax2013.betterchairs.third_party.de.sprax2013.lime")
+        relocate("de.tr7zw.changeme.nbtapi", "de.sprax2013.betterchairs.third_party.de.tr7zw.nbtapi")
+        relocate("com.cryptomorin.xseries", "de.sprax2013.betterchairs.third_party.com.cryptomorin.xseries")
+    }
 
     tasks.build {
         dependsOn(tasks.spotlessApply)
