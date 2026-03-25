@@ -60,6 +60,7 @@ public class BetterChairsPlugin extends JavaPlugin {
         getCommand(getName()).setExecutor(cmdExecutor);
         getCommand("toggleChairs").setExecutor(cmdExecutor);
         getCommand("sit").setExecutor(cmdExecutor);
+        getCommand("dismount").setExecutor(cmdExecutor);
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PlaceholderApiExpansion(this).register();

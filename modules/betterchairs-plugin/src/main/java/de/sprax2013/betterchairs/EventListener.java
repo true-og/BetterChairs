@@ -26,6 +26,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 public class EventListener implements Listener {
@@ -261,6 +262,15 @@ public class EventListener implements Listener {
         if (c != null) {
             getManager().destroy(c, true);
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onSneak(PlayerToggleSneakEvent e) {
+        if (!e.isSneaking()) {
+            return;
+        }
+
+        getManager().dismount(e.getPlayer());
     }
 
     /**

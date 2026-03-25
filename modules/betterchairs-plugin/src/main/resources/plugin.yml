@@ -21,6 +21,9 @@ commands:
   sit:
     description: 'Allows a player to sit on the ground'
     permission: ${pluginName}.cmd.sit
+  dismount:
+    description: 'Allows a player to leave a BetterChairs seat'
+    permission: ${pluginName}.cmd.dismount
 
 permissions:
   ${pluginName}.use:
@@ -36,8 +39,10 @@ permissions:
   ${pluginName}.cmd.sit:
     description: Allows a player to sit on the ground
     default: true
+  ${pluginName}.cmd.dismount:
+    description: Allows a player to leave a BetterChairs seat
+    default: true
   ${pluginName}.cmd.reset:
     description: Allows admins to eject all players from their chairs
   ${pluginName}.cmd.reload:
     description: Allows admins to reload the plugin's configuration files
-

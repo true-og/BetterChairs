@@ -130,7 +130,7 @@ public class ChairManager {
                     break;
             }
 
-            player.teleport(loc);
+            EssentialsSupport.teleportPreservingBack(player, loc);
         }
 
         this.chairs.add(chair);
@@ -171,7 +171,8 @@ public class ChairManager {
         this.chairs.remove(chair);
 
         if (hasPassenger && teleportPlayer) {
-            Runnable teleportTask = () -> chair.player.teleport(chair.getPlayerLeavingLocation());
+            Runnable teleportTask =
+                    () -> EssentialsSupport.teleportPreservingBack(chair.player, chair.getPlayerLeavingLocation());
 
             if (sameTickTeleport) {
                 teleportTask.run();
@@ -179,6 +180,17 @@ public class ChairManager {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), teleportTask);
             }
         }
+    }
+
+    public boolean dismount(@NotNull Player player) {
+        Chair chair = getChair(player);
+
+        if (chair == null) {
+            return false;
+        }
+
+        destroy(chair, true);
+        return true;
     }
 
     public int destroyAll(boolean teleportPlayer) {

@@ -86,7 +86,7 @@ public class Settings {
 
     public static final ConfigEntry USE_STAIRS = config.createEntry("Chairs.UseStairs", true, "Can stairs be chairs?");
     public static final ConfigEntry USE_SLABS = config.createEntry(
-                    "Chairs.UseSlabs", false, "Can half slabs be chairs too?")
+                    "Chairs.UseSlabs", true, "Can half slabs be chairs too?")
             .setLegacyKey(0, "Use slab");
 
     public static final ConfigEntry LEAVING_CHAIR_TELEPORT_TO_OLD_LOCATION = config.createEntry(

@@ -16,10 +16,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 // TODO: Put all strings into messages.yml
 // TODO: Split file into smaller ones
 public class BetterChairsCommand implements CommandExecutor, TabCompleter {
-    private final String permsSit, permsToggle, permsReload, permsReset;
+    private final String permsSit, permsDismount, permsToggle, permsReload, permsReset;
 
     protected BetterChairsCommand(JavaPlugin plugin) {
         this.permsSit = plugin.getName() + ".cmd.sit";
+        this.permsDismount = plugin.getName() + ".cmd.dismount";
         this.permsToggle = plugin.getName() + ".cmd.toggle";
 
         this.permsReload = plugin.getName() + ".cmd.reload";
@@ -31,6 +32,7 @@ public class BetterChairsCommand implements CommandExecutor, TabCompleter {
         if (!sender.hasPermission(this.permsToggle)
                 && !sender.hasPermission(this.permsReload)
                 && !sender.hasPermission(this.permsReset)
+                && !sender.hasPermission(this.permsDismount)
                 && !sender.hasPermission(this.permsSit)) {
             sender.sendMessage(Messages.getString(Messages.NO_PERMISSION));
         }
@@ -81,6 +83,20 @@ public class BetterChairsCommand implements CommandExecutor, TabCompleter {
                 getManager().create(p, b);
             } else {
                 sender.sendMessage(Messages.getPrefix() + " §cYou need to be on solid ground");
+            }
+        } else if (cmd.getName().equalsIgnoreCase("dismount")) {
+            if (!sender.hasPermission(this.permsDismount)) {
+                sender.sendMessage(Messages.getString(Messages.NO_PERMISSION));
+                return true;
+            }
+
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(Messages.getPrefix() + " §cOnly players are able to dismount");
+                return true;
+            }
+
+            if (!getManager().dismount((Player) sender)) {
+                sender.sendMessage(Messages.getPrefix() + " §cYou are not sitting on a BetterChairs seat");
             }
         } else if (args.length >= 1) {
             if (args[0].equalsIgnoreCase("toggle")) {
@@ -152,7 +168,7 @@ public class BetterChairsCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         List<String> result = new ArrayList<>();
 
-        if (!cmd.getName().equalsIgnoreCase("sit")) {
+        if (!cmd.getName().equalsIgnoreCase("sit") && !cmd.getName().equalsIgnoreCase("dismount")) {
             if (args.length == 1) {
                 String arg = args[0].toLowerCase();
 

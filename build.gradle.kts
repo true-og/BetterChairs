@@ -8,7 +8,7 @@ plugins {
     id("java")
     id("java-library")
     id("com.diffplug.spotless") version "7.0.4"
-    id("com.gradleup.shadow") version "8.3.6"
+    id("com.gradleup.shadow") version "8.3.9"
     eclipse
 }
 
@@ -16,37 +16,63 @@ group = "de.sprax2013"
 version = "1.13-OG"
 
 val pluginName = "BetterChairs"
+val selfMavenLocalRepo = System.getProperty("SELF_MAVEN_LOCAL_REPO")?.let(::file)?.takeIf { it.isDirectory }
+val hasWarnedAboutMissingBootstrap = mutableSetOf<String>()
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+        vendor.set(JvmVendorSpec.GRAAL_VM)
+    }
+    withSourcesJar()
+    withJavadocJar()
+}
 
 allprojects {
-    val customMavenLocal = System.getProperty("SELF_MAVEN_LOCAL_REPO")
-    if (customMavenLocal != null) {
-        val mavenLocalDir = file(customMavenLocal)
-        if (mavenLocalDir.isDirectory) {
-            repositories {
-                maven {
-                    url = uri("file://${mavenLocalDir.absolutePath}")
-                    metadataSources { mavenPom() }
-                    content {
-                        includeGroup("org.spigotmc")
-                        includeGroup("org.bukkit")
-                        includeGroup("net.md-5")
-                        includeGroup("com.mojang")
-                    }
+    if (selfMavenLocalRepo != null) {
+        repositories {
+            maven {
+                url = uri("file://${selfMavenLocalRepo.absolutePath}")
+                metadataSources { mavenPom() }
+                content {
+                    includeGroup("org.spigotmc")
+                    includeGroup("org.bukkit")
+                    includeGroup("net.md-5")
+                    includeGroup("com.mojang")
                 }
             }
         }
     }
-
     repositories {
         mavenCentral()
         gradlePluginPortal()
+        maven("https://repo.essentialsx.net/releases/")
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        maven("https://maven.elmakers.com/repository/") {
+            name = "ElMakersFallback"
+            content {
+                includeGroup("org.spigotmc")
+                includeGroup("org.bukkit")
+                includeGroup("net.md-5")
+                includeGroup("com.mojang")
+            }
+        }
         maven("https://repo.codemc.io/repository/maven-public/")
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
         maven("https://repo.sprax2013.de/repository/maven-snapshots/")
         maven("https://repo.sprax2013.de/repository/maven-releases/")
         maven("https://repo.purpurmc.org/snapshots")
-        mavenLocal()
+        maven { url = uri("file://${System.getProperty("user.home")}/.m2/repository") }
+        if (selfMavenLocalRepo != null) {
+            println("Using SELF_MAVEN_LOCAL_REPO at: ${selfMavenLocalRepo.absolutePath}")
+            maven { url = uri("file://${selfMavenLocalRepo.absolutePath}") }
+        } else {
+            if (hasWarnedAboutMissingBootstrap.add("SELF_MAVEN_LOCAL_REPO")) {
+                logger.warn("TrueOG Bootstrap not found, defaulting to ~/.m2 for mavenLocal()")
+            }
+            mavenLocal()
+        }
     }
 }
 
@@ -114,8 +140,9 @@ subprojects {
 project(":modules:betterchairs-api") {
     dependencies {
         compileOnly("org.spigotmc:spigot-api:1.8-R0.1-SNAPSHOT")
+        compileOnly("net.essentialsx:EssentialsX:2.20.1")
         api("de.sprax2013.lime:lime-spigot-api:0.0.4-SNAPSHOT")
-        api("de.tr7zw:item-nbt-api:2.15.0")
+        api("de.tr7zw:item-nbt-api:2.14.1")
         api("com.github.cryptomorin:XSeries:13.3.0")
         compileOnly("org.jetbrains:annotations:26.0.2")
     }
@@ -218,4 +245,3 @@ subprojects
         }
         nms.tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
     }
-
