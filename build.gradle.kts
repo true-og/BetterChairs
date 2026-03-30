@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "de.sprax2013"
-version = "1.13-OG"
+version = "1.14-OG"
 
 val pluginName = "BetterChairs"
 val selfMavenLocalRepo = System.getProperty("SELF_MAVEN_LOCAL_REPO")?.let(::file)?.takeIf { it.isDirectory }

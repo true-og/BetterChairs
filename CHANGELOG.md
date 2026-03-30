@@ -1,5 +1,20 @@
 # Change Log
 
+## Version 1.14-OG:
+* Merged upstream changes up to v1.18.0
+
+### Added
+* Dismount players when chair blocks are affected by external changes (leaf decay, fire, ice melting, physics updates)
+
+### Fixed
+* Use `.equals()` instead of `==` for comparing Players, Blocks, and Entities in ChairManager
+* Replace deprecated `XMaterial.parseMaterial()` with `XMaterial.get()`
+* Improved error handling for NMS loading — now logs critical errors instead of silently falling back
+
+### Changed
+* Grammar fix in piston event JavaDoc comments
+
+
 ## Version 1.13-OG:
 * Removed support for 1.20.6+
 * Builds with gradle 8.14.2 instead of maven

@@ -231,7 +231,7 @@ public class ChairManager {
         if (!Bukkit.isPrimaryThread()) throw new IllegalStateException(Messages.ERR_ASYNC_API_CALL);
 
         for (Chair c : this.chairs.toArray(new Chair[0])) {
-            if (p == c.player && !c.destroyOnNoPassenger()) {
+            if (c.player.equals(p) && !c.destroyOnNoPassenger()) {
                 return c;
             }
         }
@@ -244,7 +244,7 @@ public class ChairManager {
         if (!Bukkit.isPrimaryThread()) throw new IllegalStateException(Messages.ERR_ASYNC_API_CALL);
 
         for (Chair c : this.chairs.toArray(new Chair[0])) {
-            if (b == c.block && !c.destroyOnNoPassenger()) {
+            if (c.block.equals(b) && !c.destroyOnNoPassenger()) {
                 return c;
             }
         }
@@ -257,7 +257,7 @@ public class ChairManager {
         if (!Bukkit.isPrimaryThread()) throw new IllegalStateException(Messages.ERR_ASYNC_API_CALL);
 
         for (Chair c : this.chairs.toArray(new Chair[0])) {
-            if (entity == c.chairEntity && !c.destroyOnNoPassenger()) {
+            if (c.chairEntity.equals(entity) && !c.destroyOnNoPassenger()) {
                 return c;
             }
         }

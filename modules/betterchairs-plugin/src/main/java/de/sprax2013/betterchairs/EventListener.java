@@ -20,8 +20,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -73,7 +77,7 @@ public class EventListener implements Listener {
                     Material mat = null;
 
                     if (xMat.isPresent()) {
-                        mat = xMat.get().parseMaterial();
+                        mat = xMat.get().get();
                     }
 
                     if (mat != null) {
@@ -366,7 +370,7 @@ public class EventListener implements Listener {
     }
 
     /**
-     * Check if another plugin insists on a chair's block being moved by an piston<br>
+     * Check if another plugin insists on a chair's block being moved by a piston<br>
      * if so, destroy the chair
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -394,7 +398,7 @@ public class EventListener implements Listener {
     }
 
     /**
-     * Check if another plugin insists on a chair's block being moved by an piston<br>
+     * Check if another plugin insists on a chair's block being moved by a piston<br>
      * if so, destroy the chair
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -403,6 +407,44 @@ public class EventListener implements Listener {
             Chair chair = getManager().getChair(b);
 
             if (chair != null) {
+                getManager().destroy(chair, true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onBlockFadeMonitor(BlockFadeEvent e) {
+        Chair chair = getManager().getChair(e.getBlock());
+
+        if (chair != null) {
+            getManager().destroy(chair, true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onLeavesDecayMonitor(LeavesDecayEvent e) {
+        Chair chair = getManager().getChair(e.getBlock());
+
+        if (chair != null) {
+            getManager().destroy(chair, true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onBlockBurnMonitor(BlockBurnEvent e) {
+        Chair chair = getManager().getChair(e.getBlock());
+
+        if (chair != null) {
+            getManager().destroy(chair, true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onBlockPhysicsMonitor(BlockPhysicsEvent e) {
+        Chair chair = getManager().getChair(e.getBlock());
+
+        if (chair != null) {
+            if (e.getBlock().isEmpty()) {
                 getManager().destroy(chair, true);
             }
         }
