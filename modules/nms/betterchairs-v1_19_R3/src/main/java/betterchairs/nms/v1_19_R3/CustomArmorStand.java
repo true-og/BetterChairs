@@ -3,14 +3,14 @@ package betterchairs.nms.v1_19_R3;
 import de.sprax2013.betterchairs.ChairManager;
 import de.sprax2013.betterchairs.ChairUtils;
 import de.sprax2013.betterchairs.CustomChairEntity;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.decoration.EntityArmorStand;
+import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.level.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-class CustomArmorStand extends ArmorStand implements CustomChairEntity {
+class CustomArmorStand extends EntityArmorStand implements CustomChairEntity {
     private boolean remove = false;
     private final int regenerationAmplifier;
 
@@ -19,7 +19,7 @@ class CustomArmorStand extends ArmorStand implements CustomChairEntity {
     /**
      * @param regenerationAmplifier provide a negative value to disable regeneration
      */
-    public CustomArmorStand(ServerLevel world, double d0, double d1, double d2, int regenerationAmplifier) {
+    public CustomArmorStand(World world, double d0, double d1, double d2, int regenerationAmplifier) {
         super(world, d0, d1, d2);
 
         this.regenerationAmplifier = regenerationAmplifier;
@@ -32,47 +32,40 @@ class CustomArmorStand extends ArmorStand implements CustomChairEntity {
     }
 
     @Override
-    public void tick() {
+    public void l() { // tick
         if (this.remove) return; // If the ArmorStand is being removed, no need to bother
-        if (this.tickCount % 10 == 0) return; // Only run every 10 ticks
+        if (this.ag % 10 == 0) return; // Only run every 10 ticks
 
-        Entity passenger = getFirstPassenger();
+        Entity passenger = this.cN();
 
-        if (!(passenger instanceof Player)) {
+        if (!(passenger instanceof EntityHuman)) {
             this.remove = true;
-            getBukkitEntity().remove();
+            this.getBukkitEntity().remove();
             return;
         }
 
         // Rotate the ArmorStand together with its passenger
         // Not happy about using Bukkit API here (+ scheduling) but I don't see a good alternative with all the
         // obfuscation
-        Bukkit.getScheduler()
-                .runTask(ChairManager.getPlugin(), () -> getBukkitEntity().setRotation(passenger.getBukkitYaw(), 0));
+        Bukkit.getScheduler().runTask(ChairManager.getPlugin(), () -> this.getBukkitEntity()
+                .setRotation(passenger.getBukkitYaw(), 0));
 
-        if (ChairUtils.didChairEntityMove(this.expectedLocation, getX(), getY(), getZ())) {
-            this.expectedLocation.setY(Math.min(getY(), this.expectedLocation.getY()));
+        if (ChairUtils.didChairEntityMove(this.expectedLocation, this.dl(), this.dn(), this.dr())) {
+            this.expectedLocation.setY(Math.min(this.dn(), this.expectedLocation.getY()));
 
-            teleportToWithTicket(
-                    this.expectedLocation.getX(), this.expectedLocation.getY(), this.expectedLocation.getZ());
+            this.n(this.expectedLocation.getX(), this.expectedLocation.getY(), this.expectedLocation.getZ());
         }
 
-        ChairUtils.applyRegeneration(((Player) passenger).getBukkitEntity(), this.regenerationAmplifier);
+        ChairUtils.applyRegeneration(((EntityHuman) passenger).getBukkitEntity(), this.regenerationAmplifier);
     }
 
     @Override
-    public void kill() {
+    public void a(Entity.RemovalReason removalReason) {
         // Prevents the ArmorStand from getting killed unexpectedly
-        if (shouldDie()) super.kill();
-    }
-
-    @Override
-    public void remove(Entity.RemovalReason removalReason) {
-        // Prevents the ArmorStand from getting killed unexpectedly
-        if (shouldDie()) super.remove(removalReason);
+        if (shouldDie()) super.a(removalReason);
     }
 
     private boolean shouldDie() {
-        return this.remove || getPassengers().isEmpty() || !(getFirstPassenger() instanceof Player);
+        return this.remove || this.cM().isEmpty() || !(this.cN() instanceof EntityHuman);
     }
 }

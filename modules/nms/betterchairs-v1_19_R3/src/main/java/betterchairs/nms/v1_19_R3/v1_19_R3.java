@@ -6,7 +6,7 @@ import de.sprax2013.betterchairs.ChairUtils;
 import de.sprax2013.betterchairs.CustomChairEntity;
 import de.sprax2013.betterchairs.Messages;
 import java.util.Objects;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.Entity;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,7 +27,7 @@ public class v1_19_R3 extends ChairNMS {
     @Override
     public @NotNull org.bukkit.entity.Entity spawnChairEntity(
             @NotNull Location loc, int regenerationAmplifier, boolean useArmorStand) {
-        ServerLevel nmsWorld = ((CraftWorld) Objects.requireNonNull(loc.getWorld())).getHandle();
+        WorldServer nmsWorld = ((CraftWorld) Objects.requireNonNull(loc.getWorld())).getHandle();
 
         Entity nmsEntity;
 

@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "de.sprax2013"
-version = "1.14-OG"
+version = "1.18.0"
 
 val pluginName = "BetterChairs"
 val selfMavenLocalRepo = System.getProperty("SELF_MAVEN_LOCAL_REPO")?.let(::file)?.takeIf { it.isDirectory }
@@ -197,6 +197,7 @@ project(":modules:betterchairs-plugin") {
         }
         archiveClassifier.set("")
         archiveBaseName.set("BetterChairs")
+        archiveVersion.set(rootProject.version.toString())
         destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
         relocate("betterchairs.nms", "de.sprax2013.betterchairs.nms")
         relocate("de.sprax2013.lime", "de.sprax2013.betterchairs.third_party.de.sprax2013.lime")
@@ -264,7 +265,7 @@ subprojects
             "compileOnly"(project(":modules:betterchairs-api"))
             val ver = nmsVersions.getValue(nms.name)
             "compileOnly"("org.spigotmc:spigot-api:$ver")
-            val mojangMapped = ver.startsWith("1.19")
+            val mojangMapped = ver.startsWith("1.19") && nms.name != "betterchairs-v1_19_R3"
             if (mojangMapped) {
                 "compileOnly"("org.spigotmc:spigot:$ver:remapped-mojang")
             } else {
