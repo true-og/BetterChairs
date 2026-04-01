@@ -167,6 +167,9 @@ project(":modules:betterchairs-plugin") {
     tasks.shadowJar {
         exclude("META-INF/**", "LICENSE")
         minimize {
+            // The API module contains interfaces (e.g. CustomChairEntity) that are only
+            // referenced by NMS modules, not directly by the plugin — exclude from removal
+            exclude(project(":modules:betterchairs-api"))
             // NMS modules are loaded via reflection (Class.forName) so the minimizer
             // cannot trace them statically — exclude them from removal
             exclude(project(":modules:nms:betterchairs-v1_19_R3"))
