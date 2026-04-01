@@ -153,7 +153,7 @@ project(":modules:betterchairs-plugin") {
 
     tasks.named<ProcessResources>("processResources") {
         val props = mapOf(
-            "version" to version,
+            "version" to rootProject.version,
             "apiVersion" to apiVersion,
             "pluginName" to pluginName
         )
@@ -166,7 +166,32 @@ project(":modules:betterchairs-plugin") {
 
     tasks.shadowJar {
         exclude("META-INF/**", "LICENSE")
-        minimize()
+        minimize {
+            // NMS modules are loaded via reflection (Class.forName) so the minimizer
+            // cannot trace them statically — exclude them from removal
+            exclude(project(":modules:nms:betterchairs-v1_19_R3"))
+            exclude(project(":modules:nms:betterchairs-v1_19_R2"))
+            exclude(project(":modules:nms:betterchairs-v1_19_R1"))
+            exclude(project(":modules:nms:betterchairs-v1_19_0"))
+            exclude(project(":modules:nms:betterchairs-v1_18_R2"))
+            exclude(project(":modules:nms:betterchairs-v1_18_R1"))
+            exclude(project(":modules:nms:betterchairs-v1_17_R1"))
+            exclude(project(":modules:nms:betterchairs-v1_16_R3"))
+            exclude(project(":modules:nms:betterchairs-v1_16_R2"))
+            exclude(project(":modules:nms:betterchairs-v1_16_R1"))
+            exclude(project(":modules:nms:betterchairs-v1_15_R1"))
+            exclude(project(":modules:nms:betterchairs-v1_14_R1"))
+            exclude(project(":modules:nms:betterchairs-v1_13_R2"))
+            exclude(project(":modules:nms:betterchairs-v1_13_R1"))
+            exclude(project(":modules:nms:betterchairs-v1_12_R1"))
+            exclude(project(":modules:nms:betterchairs-v1_11_R1"))
+            exclude(project(":modules:nms:betterchairs-v1_10_R1"))
+            exclude(project(":modules:nms:betterchairs-v1_9_R2"))
+            exclude(project(":modules:nms:betterchairs-v1_9_R1"))
+            exclude(project(":modules:nms:betterchairs-v1_8_R3"))
+            exclude(project(":modules:nms:betterchairs-v1_8_R2"))
+            exclude(project(":modules:nms:betterchairs-v1_8_R1"))
+        }
         archiveClassifier.set("")
         archiveBaseName.set("BetterChairs")
         destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
