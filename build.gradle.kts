@@ -5,11 +5,11 @@ import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.language.jvm.tasks.ProcessResources
 
 plugins {
-    id("java")
-    id("java-library")
-    id("com.diffplug.spotless") version "7.0.4"
-    id("com.gradleup.shadow") version "8.3.9"
-    eclipse
+    id("java") // Import Java plugin.
+    id("java-library") // Import Java Library plugin.
+    id("com.diffplug.spotless") version "8.1.0" // Import Spotless plugin.
+    id("com.gradleup.shadow") version "8.3.9" // Import Shadow plugin.
+    eclipse // Import Eclipse plugin.
 }
 
 group = "de.sprax2013"
@@ -109,7 +109,8 @@ subprojects {
         testImplementation("org.hamcrest:hamcrest:2.2")
     }
 
-    tasks.withType<AbstractArchiveTask>().configureEach {
+/* ---------------------- Reproducible jars ---------------------------- */
+tasks.withType<AbstractArchiveTask>().configureEach { // Ensure reproducible .jars
         isPreserveFileTimestamps = false
         isReproducibleFileOrder = true
     }
@@ -117,8 +118,8 @@ subprojects {
     tasks.withType<JavaCompile>().configureEach {
         options.compilerArgs.add("-parameters")
         options.compilerArgs.add("-Xlint:deprecation")
-        options.encoding = "UTF-8"
-        options.isFork = true
+        options.encoding = "UTF-8" // Use UTF-8 file encoding.
+        options.isFork = true // Run javac in its own process.
     }
 
     spotless {
