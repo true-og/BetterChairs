@@ -5,7 +5,7 @@ api-version: '1.19'
 
 main: de.sprax2013.betterchairs.BetterChairsPlugin
 depend:
-  - NBTAPI
+  - Item-NBT-API
 softdepend:
   - PlaceholderAPI
 
