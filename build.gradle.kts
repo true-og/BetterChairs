@@ -143,7 +143,7 @@ project(":modules:betterchairs-api") {
         compileOnly("org.spigotmc:spigot-api:1.8-R0.1-SNAPSHOT")
         compileOnly("net.essentialsx:EssentialsX:2.20.1")
         api("de.sprax2013.lime:lime-spigot-api:0.0.4-SNAPSHOT")
-        api("de.tr7zw:item-nbt-api:2.14.1")
+        compileOnly("de.tr7zw:item-nbt-api-plugin:2.14.1")
         api("com.github.cryptomorin:XSeries:13.3.0")
         compileOnly("org.jetbrains:annotations:26.0.2")
     }
@@ -202,7 +202,6 @@ project(":modules:betterchairs-plugin") {
         destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
         relocate("betterchairs.nms", "de.sprax2013.betterchairs.nms")
         relocate("de.sprax2013.lime", "de.sprax2013.betterchairs.third_party.de.sprax2013.lime")
-        relocate("de.tr7zw.changeme.nbtapi", "de.sprax2013.betterchairs.third_party.de.tr7zw.nbtapi")
         relocate("com.cryptomorin.xseries", "de.sprax2013.betterchairs.third_party.com.cryptomorin.xseries")
     }
 
@@ -214,6 +213,7 @@ project(":modules:betterchairs-plugin") {
     dependencies {
         compileOnly("org.spigotmc:spigot-api:1.8-R0.1-SNAPSHOT")
         compileOnly("me.clip:placeholderapi:2.11.6")
+        compileOnly("de.tr7zw:item-nbt-api-plugin:2.14.1")
         implementation(project(":modules:betterchairs-api"))
         listOf(
             "v1_19_R3",

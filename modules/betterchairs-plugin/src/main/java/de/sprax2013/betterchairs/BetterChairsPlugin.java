@@ -2,7 +2,7 @@ package de.sprax2013.betterchairs;
 
 import de.sprax2013.lime.spigot.LimeDevUtilitySpigot;
 import de.sprax2013.lime.spigot.nms.NmsVersionDetector;
-import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
+import de.tr7zw.nbtapi.utils.MinecraftVersion;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
