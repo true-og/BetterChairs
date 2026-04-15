@@ -170,17 +170,6 @@ public class Settings {
             "List of all enabled/disabled block types\n\n" + "The names from Minecraft do not always work\n"
                     + "Full list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html");
 
-    public static final ConfigEntry UPDATER_ENABLED = config.createEntry(
-                    "Updater.CheckForUpdates",
-                    true,
-                    "Should we check for new versions and report to the console? (Recommended)")
-            .setLegacyKey(0, "Update Checker");
-    public static final ConfigEntry UPDATER_NOTIFY_ON_JOIN = config.createEntry(
-            "Updater.NotifyOnJoin",
-            true,
-            () -> "Should be notify admins when they join the server? (Permission: "
-                    + ChairManager.getPlugin().getName() + ".updater)");
-
     private Settings() {
         throw new IllegalStateException("Utility class");
     }
