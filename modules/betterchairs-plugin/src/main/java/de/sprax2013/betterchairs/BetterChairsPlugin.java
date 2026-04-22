@@ -25,6 +25,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public class BetterChairsPlugin extends JavaPlugin {
+    public static final String LEGACY_NAMESPACE = ChairManager.LEGACY_NAMESPACE;
+    public static final String ROOT_COMMAND = ChairManager.LEGACY_NAMESPACE;
+
     private static BetterChairsPlugin plugin;
     private static ChairManager chairManager;
 
@@ -53,7 +56,7 @@ public class BetterChairsPlugin extends JavaPlugin {
 
         // Register CommandExecutor
         BetterChairsCommand cmdExecutor = new BetterChairsCommand(this);
-        getCommand(getName()).setExecutor(cmdExecutor);
+        getCommand(ROOT_COMMAND).setExecutor(cmdExecutor);
         getCommand("toggleChairs").setExecutor(cmdExecutor);
         getCommand("sit").setExecutor(cmdExecutor);
         getCommand("dismount").setExecutor(cmdExecutor);

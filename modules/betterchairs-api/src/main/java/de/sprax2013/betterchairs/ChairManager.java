@@ -28,6 +28,8 @@ import org.jetbrains.annotations.Nullable;
  * {@link JavaPlugin#onEnable()} to ensure that other classes relying on it work as intended
  */
 public class ChairManager {
+    public static final String LEGACY_NAMESPACE = "BetterChairs";
+
     protected static JavaPlugin plugin;
     protected static ChairManager instance;
 
@@ -183,13 +185,17 @@ public class ChairManager {
     }
 
     public boolean dismount(@NotNull Player player) {
+        return dismount(player, false);
+    }
+
+    public boolean dismount(@NotNull Player player, boolean sameTickTeleport) {
         Chair chair = getChair(player);
 
         if (chair == null) {
             return false;
         }
 
-        destroy(chair, true);
+        destroy(chair, true, sameTickTeleport);
         return true;
     }
 

@@ -19,12 +19,12 @@ public class BetterChairsCommand implements CommandExecutor, TabCompleter {
     private final String permsSit, permsDismount, permsToggle, permsReload, permsReset;
 
     protected BetterChairsCommand(JavaPlugin plugin) {
-        this.permsSit = plugin.getName() + ".cmd.sit";
-        this.permsDismount = plugin.getName() + ".cmd.dismount";
-        this.permsToggle = plugin.getName() + ".cmd.toggle";
-
-        this.permsReload = plugin.getName() + ".cmd.reload";
-        this.permsReset = plugin.getName() + ".cmd.reset";
+        String permissionBase = BetterChairsPlugin.LEGACY_NAMESPACE;
+        this.permsSit = permissionBase + ".cmd.sit";
+        this.permsDismount = permissionBase + ".cmd.dismount";
+        this.permsToggle = permissionBase + ".cmd.toggle";
+        this.permsReload = permissionBase + ".cmd.reload";
+        this.permsReset = permissionBase + ".cmd.reset";
     }
 
     @Override

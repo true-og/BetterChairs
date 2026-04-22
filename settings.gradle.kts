@@ -1,4 +1,4 @@
-rootProject.name = "BetterChairs"
+rootProject.name = "BetterChairs-OG"
 
 include(
     ":modules:betterchairs-api",
@@ -26,4 +26,3 @@ include(
     ":modules:nms:betterchairs-v1_8_R2",
     ":modules:nms:betterchairs-v1_8_R1"
 )
-

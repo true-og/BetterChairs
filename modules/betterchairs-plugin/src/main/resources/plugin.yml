@@ -1,4 +1,4 @@
-name: ${pluginName}
+name: ${projectName}
 description: Players can sit on chairs and everywhere the admin wants them to be able to.
 version: ${version}
 api-version: '1.19'
@@ -11,38 +11,38 @@ softdepend:
 
 author: SpraxDev
 authors: [ BlackScarx ]
-website: https://github.com/SpraxDev/BetterChairs
+website: https://github.com/true-og/BetterChairs
 
 commands:
-  ${pluginName}:
+  ${commandName}:
     description: 'Toggle, Reload or Reset BetterChairs'
   toggleChairs:
     description: 'Allows individual players to disabled chairs for them'
     aliases: [ bct ]
-    permission: ${pluginName}.cmd.toggle
+    permission: ${permissionBase}.cmd.toggle
   sit:
     description: 'Allows a player to sit on the ground'
-    permission: ${pluginName}.cmd.sit
+    permission: ${permissionBase}.cmd.sit
   dismount:
     description: 'Allows a player to leave a BetterChairs seat'
-    permission: ${pluginName}.cmd.dismount
+    permission: ${permissionBase}.cmd.dismount
 
 permissions:
-  ${pluginName}.use:
+  ${permissionBase}.use:
     description: Allows players to sit on chairs
     default: true
-  ${pluginName}.regeneration:
+  ${permissionBase}.regeneration:
     description: Grants regeneration to a player when sitting
-  ${pluginName}.cmd.toggle:
+  ${permissionBase}.cmd.toggle:
     description: Allows individual players to disabled chairs for them
     default: true
-  ${pluginName}.cmd.sit:
+  ${permissionBase}.cmd.sit:
     description: Allows a player to sit on the ground
     default: true
-  ${pluginName}.cmd.dismount:
+  ${permissionBase}.cmd.dismount:
     description: Allows a player to leave a BetterChairs seat
     default: true
-  ${pluginName}.cmd.reset:
+  ${permissionBase}.cmd.reset:
     description: Allows admins to eject all players from their chairs
-  ${pluginName}.cmd.reload:
+  ${permissionBase}.cmd.reload:
     description: Allows admins to reload the plugin's configuration files

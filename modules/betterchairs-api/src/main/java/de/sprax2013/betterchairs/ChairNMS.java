@@ -86,7 +86,7 @@ public abstract class ChairNMS {
         if (!Settings.REGENERATION_ENABLED.getValueAsBoolean()
                 || Settings.REGENERATION_AMPLIFIER.getValueAsInt() <= 0
                 || (Settings.REGENERATION_CHECK_PERMISSION.getValueAsBoolean()
-                        && !p.hasPermission(ChairManager.plugin.getName() + ".regeneration"))) return -1;
+                        && !p.hasPermission(ChairManager.LEGACY_NAMESPACE + ".regeneration"))) return -1;
 
         return Settings.REGENERATION_AMPLIFIER.getValueAsInt() - 1;
     }

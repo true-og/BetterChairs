@@ -13,9 +13,11 @@ plugins {
 }
 
 group = "de.sprax2013"
-version = "1.18.0"
+version = "1.0"
 
-val pluginName = "BetterChairs"
+val projectName = "BetterChairs-OG"
+val commandName = "BetterChairs"
+val permissionBase = "BetterChairs"
 val selfMavenLocalRepo = System.getProperty("SELF_MAVEN_LOCAL_REPO")?.let(::file)?.takeIf { it.isDirectory }
 val hasWarnedAboutMissingBootstrap = mutableSetOf<String>()
 
@@ -156,7 +158,9 @@ project(":modules:betterchairs-plugin") {
         val props = mapOf(
             "version" to rootProject.version,
             "apiVersion" to apiVersion,
-            "pluginName" to pluginName
+            "projectName" to projectName,
+            "commandName" to commandName,
+            "permissionBase" to permissionBase
         )
         inputs.properties(props)
         filesMatching("plugin.yml") { expand(props) }
@@ -197,7 +201,7 @@ project(":modules:betterchairs-plugin") {
             exclude(project(":modules:nms:betterchairs-v1_8_R1"))
         }
         archiveClassifier.set("")
-        archiveBaseName.set("BetterChairs")
+        archiveBaseName.set(projectName)
         archiveVersion.set(rootProject.version.toString())
         destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
         relocate("betterchairs.nms", "de.sprax2013.betterchairs.nms")

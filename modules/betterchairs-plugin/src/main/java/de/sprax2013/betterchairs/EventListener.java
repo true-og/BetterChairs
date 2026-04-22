@@ -118,7 +118,7 @@ public class EventListener implements Listener {
         }
         if (e.getPlayer().getVehicle() != null && !Settings.ALLOW_SWITCHING_SEATS.getValueAsBoolean())
             return; // Already sitting on something else
-        if (!e.getPlayer().hasPermission(BetterChairsPlugin.getInstance().getName() + ".use")) return;
+        if (!e.getPlayer().hasPermission(BetterChairsPlugin.LEGACY_NAMESPACE + ".use")) return;
         if (Settings.NEEDS_EMPTY_HANDS.getValueAsBoolean()
                 && !getManager().chairNMS.hasEmptyMainHand(e.getPlayer())) return;
 
@@ -274,7 +274,9 @@ public class EventListener implements Listener {
             return;
         }
 
-        getManager().dismount(e.getPlayer());
+        if (getManager().dismount(e.getPlayer(), true)) {
+            Bukkit.getScheduler().runTask(getInstance(), () -> e.getPlayer().setSneaking(false));
+        }
     }
 
     /**
