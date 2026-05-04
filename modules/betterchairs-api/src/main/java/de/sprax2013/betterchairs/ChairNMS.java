@@ -83,11 +83,11 @@ public abstract class ChairNMS {
     }
 
     public static int getRegenerationAmplifier(Player p) {
-        if (!Settings.REGENERATION_ENABLED.getValueAsBoolean()
-                || Settings.REGENERATION_AMPLIFIER.getValueAsInt() <= 0
-                || (Settings.REGENERATION_CHECK_PERMISSION.getValueAsBoolean()
+        if (!Settings.bool(Settings.REGENERATION_ENABLED)
+                || Settings.integer(Settings.REGENERATION_AMPLIFIER) <= 0
+                || (Settings.bool(Settings.REGENERATION_CHECK_PERMISSION)
                         && !p.hasPermission(ChairManager.LEGACY_NAMESPACE + ".regeneration"))) return -1;
 
-        return Settings.REGENERATION_AMPLIFIER.getValueAsInt() - 1;
+        return Settings.integer(Settings.REGENERATION_AMPLIFIER) - 1;
     }
 }

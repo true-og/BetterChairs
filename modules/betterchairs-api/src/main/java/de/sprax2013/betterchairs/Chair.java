@@ -80,13 +80,13 @@ public class Chair {
     @NotNull
     public Location getPlayerLeavingLocation() {
         Location loc;
-        if (Settings.LEAVING_CHAIR_TELEPORT_TO_OLD_LOCATION.getValueAsBoolean()) {
+        if (Settings.bool(Settings.LEAVING_CHAIR_TELEPORT_TO_OLD_LOCATION)) {
             loc = this.playerOriginalLoc.clone();
         } else {
             loc = this.block.getRelative(BlockFace.UP).getLocation().add(0.5, 0, 0.5);
         }
 
-        if (Settings.LEAVING_CHAIR_KEEP_HEAD_ROTATION.getValueAsBoolean()) {
+        if (Settings.bool(Settings.LEAVING_CHAIR_KEEP_HEAD_ROTATION)) {
             loc.setDirection(this.player.getLocation().getDirection());
         }
 

@@ -51,13 +51,13 @@ public class EventListener implements Listener {
 
     public EventListener() {
         Runnable task = () -> {
-            if (Settings.MATERIAL_FILTER_ENABLED.getValueAsBoolean()) {
+            if (Settings.bool(Settings.MATERIAL_FILTER_ENABLED)) {
                 getMaterialFilter(); // Populate list to make sure invalid materials are logged
             }
         };
 
         // Make sure that our list is up-to-date, after reloading the settings
-        Settings.getConfig().addListener(() -> {
+        Settings.addListener(() -> {
             this.filteredMaterials = null;
 
             task.run();
@@ -70,7 +70,7 @@ public class EventListener implements Listener {
         if (this.filteredMaterials == null) {
             this.filteredMaterials = new ArrayList<>();
 
-            List<String> names = Settings.MATERIAL_FILTER_NAMES.getValueAsStringList();
+            List<String> names = Settings.stringList(Settings.MATERIAL_FILTER_NAMES);
             if (names != null) {
                 for (String name : names) {
                     Optional<XMaterial> xMat = XMaterial.matchXMaterial(name);
@@ -85,7 +85,7 @@ public class EventListener implements Listener {
                     } else {
                         ChairManager.getLogger()
                                 .warning(() -> "Invalid block type '" + name + "' in "
-                                        + Settings.MATERIAL_FILTER_NAMES.getKey());
+                                        + Settings.MATERIAL_FILTER_NAMES);
                     }
                 }
             }
@@ -102,7 +102,7 @@ public class EventListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH)
     private void onInteract(PlayerInteractEvent e) {
-        if (e.isCancelled() && !Settings.IGNORES_INTERACT_PREVENTION.getValueAsBoolean()) return;
+        if (e.isCancelled() && !Settings.bool(Settings.IGNORES_INTERACT_PREVENTION)) return;
         if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         Chair chairTheCurrentPlayerIsSittingIn = getManager().getChair(e.getPlayer());
@@ -113,60 +113,60 @@ public class EventListener implements Listener {
         if (getManager().hasChairsDisabled(e.getPlayer())) return;
         if (chairTheCurrentPlayerIsSittingIn != null
                 && // This also destroys zombie chair on old spigot versions
-                !Settings.ALLOW_SWITCHING_SEATS.getValueAsBoolean()) {
+                !Settings.bool(Settings.ALLOW_SWITCHING_SEATS)) {
             return;
         }
-        if (e.getPlayer().getVehicle() != null && !Settings.ALLOW_SWITCHING_SEATS.getValueAsBoolean())
+        if (e.getPlayer().getVehicle() != null && !Settings.bool(Settings.ALLOW_SWITCHING_SEATS))
             return; // Already sitting on something else
         if (!e.getPlayer().hasPermission(BetterChairsPlugin.LEGACY_NAMESPACE + ".use")) return;
-        if (Settings.NEEDS_EMPTY_HANDS.getValueAsBoolean()
+        if (Settings.bool(Settings.NEEDS_EMPTY_HANDS)
                 && !getManager().chairNMS.hasEmptyMainHand(e.getPlayer())) return;
 
         // Is world disabled?
-        if (Settings.WORLD_FILTER_ENABLED.getValueAsBoolean()) {
-            boolean worldInFilter = Objects.requireNonNull(Settings.WORLD_FILTER_NAMES.getValueAsStringList())
+        if (Settings.bool(Settings.WORLD_FILTER_ENABLED)) {
+            boolean worldInFilter = Objects.requireNonNull(Settings.stringList(Settings.WORLD_FILTER_NAMES))
                     .contains(e.getPlayer().getWorld().getName());
 
             // World on Blacklist or not on Whitelist
-            if (worldInFilter == Settings.WORLD_FILTER_AS_BLACKLIST.getValueAsBoolean()) return;
+            if (worldInFilter == Settings.bool(Settings.WORLD_FILTER_AS_BLACKLIST)) return;
         }
 
         /* Check Block */
-        if ((!Settings.MATERIAL_FILTER_ENABLED.getValueAsBoolean()
-                        || !Settings.MATERIAL_FILTER_ALLOW_ALL_TYPES.getValueAsBoolean())
+        if ((!Settings.bool(Settings.MATERIAL_FILTER_ENABLED)
+                        || !Settings.bool(Settings.MATERIAL_FILTER_ALLOW_ALL_TYPES))
                 && !getManager().chairNMS.isStair(e.getClickedBlock())
                 && !getManager().chairNMS.isSlab(e.getClickedBlock())) return; // Not a Stair or Slab
 
         if (!e.getClickedBlock().getRelative(BlockFace.UP).isEmpty()
-                && Settings.CHAIR_NEED_AIR_ABOVE.getValueAsBoolean()) return; // Needs air above chair
+                && Settings.bool(Settings.CHAIR_NEED_AIR_ABOVE)) return; // Needs air above chair
 
         if (e.getClickedBlock().getRelative(BlockFace.DOWN).isEmpty()
-                && !Settings.CHAIR_ALLOW_AIR_BELOW.getValueAsBoolean()) return; // Does not allow air below chair
+                && !Settings.bool(Settings.CHAIR_ALLOW_AIR_BELOW)) return; // Does not allow air below chair
 
         // Block type disabled in config?
-        if (!Settings.MATERIAL_FILTER_ENABLED.getValueAsBoolean()
-                || (Settings.MATERIAL_FILTER_ENABLED.getValueAsBoolean()
-                        && !Settings.MATERIAL_FILTER_ALLOW_ALL_TYPES.getValueAsBoolean())) {
-            if ((!Settings.USE_STAIRS.getValueAsBoolean()
+        if (!Settings.bool(Settings.MATERIAL_FILTER_ENABLED)
+                || (Settings.bool(Settings.MATERIAL_FILTER_ENABLED)
+                        && !Settings.bool(Settings.MATERIAL_FILTER_ALLOW_ALL_TYPES))) {
+            if ((!Settings.bool(Settings.USE_STAIRS)
                             && getManager().chairNMS.isStair(e.getClickedBlock()))
-                    || (!Settings.USE_SLABS.getValueAsBoolean()
+                    || (!Settings.bool(Settings.USE_SLABS)
                             && getManager().chairNMS.isSlab(e.getClickedBlock()))) return;
 
             if (getManager().chairNMS.isStair(e.getClickedBlock())
                     && getManager().chairNMS.isStairUpsideDown(e.getClickedBlock())) return; // Stair but upside down
         }
 
-        if (Settings.MATERIAL_FILTER_ENABLED.getValueAsBoolean()) {
+        if (Settings.bool(Settings.MATERIAL_FILTER_ENABLED)) {
             boolean blockInFilter =
                     getMaterialFilter().contains(e.getClickedBlock().getType());
 
             // Block type on Blacklist or not on Whitelist
-            if (blockInFilter == Settings.MATERIAL_FILTER_AS_BLACKLIST.getValueAsBoolean()) return;
+            if (blockInFilter == Settings.bool(Settings.MATERIAL_FILTER_AS_BLACKLIST)) return;
         }
 
         // Check Chair
         if (getManager().isOccupied(e.getClickedBlock())) {
-            if (Settings.MSG_ALREADY_OCCUPIED.getValueAsBoolean()
+            if (Settings.bool(Settings.MSG_ALREADY_OCCUPIED)
                     && (chairTheCurrentPlayerIsSittingIn == null
                             || !chairTheCurrentPlayerIsSittingIn.getBlock().equals(e.getClickedBlock()))) {
                 e.getPlayer().sendMessage(Messages.getString(Messages.USE_ALREADY_OCCUPIED));
@@ -176,7 +176,7 @@ public class EventListener implements Listener {
         }
 
         // Check if Chair needs Signs
-        if (Settings.NEEDS_SIGNS.getValueAsBoolean()) {
+        if (Settings.bool(Settings.NEEDS_SIGNS)) {
             BlockFace rotation = getManager().chairNMS.getBlockRotation(e.getClickedBlock());
 
             BlockFace side1 =
@@ -190,7 +190,7 @@ public class EventListener implements Listener {
             // Are WALL_SIGNs placed?
             if (!WALL_SIGN_MATERIALS.contains(XMaterial.matchXMaterial(block1.getType()))
                     || !WALL_SIGN_MATERIALS.contains(XMaterial.matchXMaterial(block2.getType()))) {
-                if (Settings.MSG_NEEDS_SIGNS.getValueAsBoolean()) {
+                if (Settings.bool(Settings.MSG_NEEDS_SIGNS)) {
                     e.getPlayer().sendMessage(Messages.getString(Messages.USE_NEEDS_SIGNS));
                 }
 
@@ -207,7 +207,7 @@ public class EventListener implements Listener {
 
             // Are they attached to the chair?
             if (!signOption1 && !signOption2) {
-                if (Settings.MSG_NEEDS_SIGNS.getValueAsBoolean()) {
+                if (Settings.bool(Settings.MSG_NEEDS_SIGNS)) {
                     e.getPlayer().sendMessage(Messages.getString(Messages.USE_NEEDS_SIGNS));
                 }
 
@@ -216,7 +216,7 @@ public class EventListener implements Listener {
         }
 
         // Check the distance to the chair
-        if (Settings.ALLOWED_DISTANCE_TO_CHAIR.getValueAsInt() > 0
+        if (Settings.integer(Settings.ALLOWED_DISTANCE_TO_CHAIR) > 0
                 && e.getPlayer()
                                 .getLocation()
                                 .distance(e.getClickedBlock()
@@ -226,7 +226,7 @@ public class EventListener implements Listener {
                                                 e.getClickedBlock().getX() > 0 ? 0.5 : -0.5,
                                                 0,
                                                 e.getClickedBlock().getZ() > 0 ? 0.5 : -0.5))
-                        > Settings.ALLOWED_DISTANCE_TO_CHAIR.getValueAsInt()) {
+                        > Settings.integer(Settings.ALLOWED_DISTANCE_TO_CHAIR)) {
             return;
         }
 
@@ -243,7 +243,7 @@ public class EventListener implements Listener {
             if (getManager().create(e.getPlayer(), e.getClickedBlock())) {
                 e.setCancelled(true);
 
-                if (Settings.MSG_NOW_SITTING.getValueAsBoolean()) {
+                if (Settings.bool(Settings.MSG_NOW_SITTING)) {
                     e.getPlayer().sendMessage(Messages.getString(Messages.USE_NOW_SITTING));
                 }
             }

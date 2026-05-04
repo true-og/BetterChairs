@@ -51,7 +51,7 @@ public class ChairManager {
     protected void onQuit(UUID uuid) {
         Boolean value = this.disabled.remove(uuid);
 
-        if (value != null && Settings.REMEMBER_IF_PLAYER_DISABLED_CHAIRS.getValueAsBoolean()) {
+        if (value != null && Settings.bool(Settings.REMEMBER_IF_PLAYER_DISABLED_CHAIRS)) {
             Path path = new File(this.disabledForDir, uuid.toString()).toPath();
 
             try {
@@ -79,7 +79,7 @@ public class ChairManager {
         return create(
                 player,
                 block,
-                ChairUtils.getSitOffset(block, !Settings.SIT_ON_ARROWS.getValueAsBoolean(), this.chairNMS));
+                ChairUtils.getSitOffset(block, !Settings.bool(Settings.SIT_ON_ARROWS), this.chairNMS));
     }
 
     /**
@@ -99,7 +99,7 @@ public class ChairManager {
         Entity chairEntity = instance.chairNMS.spawnChairEntity(
                 block.getLocation().add(0.5, yOffset, 0.5),
                 ChairNMS.getRegenerationAmplifier(player),
-                !Settings.SIT_ON_ARROWS.getValueAsBoolean());
+                !Settings.bool(Settings.SIT_ON_ARROWS));
 
         Chair chair = new Chair(block, chairEntity, player);
 
@@ -111,7 +111,7 @@ public class ChairManager {
             return false;
         }
 
-        if (Settings.AUTO_ROTATE_PLAYER.getValueAsBoolean() && chair.getType() == ChairType.STAIR) {
+        if (Settings.bool(Settings.AUTO_ROTATE_PLAYER) && chair.getType() == ChairType.STAIR) {
             Location loc = player.getLocation();
             loc.setPitch(0);
 
@@ -290,10 +290,10 @@ public class ChairManager {
         Boolean value = this.disabled.get(uuid);
 
         if (value == null) {
-            value = Settings.REMEMBER_IF_PLAYER_DISABLED_CHAIRS.getValueAsBoolean()
+            value = Settings.bool(Settings.REMEMBER_IF_PLAYER_DISABLED_CHAIRS)
                     && new File(this.disabledForDir, uuid.toString()).exists();
             if (!value) {
-                value = Settings.HAVE_CHAIRS_DISABLED_FOR_PLAYER_BY_DEFAULT.getValueAsBoolean();
+                value = Settings.bool(Settings.HAVE_CHAIRS_DISABLED_FOR_PLAYER_BY_DEFAULT);
             }
 
             if (Bukkit.getPlayer(uuid).isOnline()) {
@@ -310,7 +310,7 @@ public class ChairManager {
 
     public void setChairsDisabled(UUID uuid, boolean areDisabled) {
         boolean isOnline = Bukkit.getOfflinePlayer(uuid).isOnline();
-        boolean directlyWriteToFile = !isOnline && Settings.REMEMBER_IF_PLAYER_DISABLED_CHAIRS.getValueAsBoolean();
+        boolean directlyWriteToFile = !isOnline && Settings.bool(Settings.REMEMBER_IF_PLAYER_DISABLED_CHAIRS);
 
         if (isOnline || directlyWriteToFile) {
             this.disabled.put(uuid, areDisabled);
